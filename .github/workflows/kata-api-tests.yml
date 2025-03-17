@@ -1,4 +1,4 @@
-name: Serenity BDD API Test Pipeline
+name: Kata API Test Pipeline
 
 on:
   push:
@@ -45,4 +45,4 @@ jobs:
         with:
           name: serenity-report
           path: target/site/serenity/
-          retention-days: 30
+          retention-days: 5
