@@ -72,10 +72,49 @@ public class UsersDefinitions {
         response.then().body("id", anyOf(equalTo(id), equalTo(id2)));
     }
 
+
+    /* put */
+    @When("El usuario actualice los datos {string} {string} y {string} y el metodo PUT URL {string}")
+    public void sendPutRequest(String username, String email, String password, String url) {
+        System.out.println(username +  " " +  email +  " " + password +  " " + url);
+
+        String stringPut = """
+            {
+                "username": "%s",
+                "email": "%s",
+                "password": "%s"
+            }
+            """.formatted(username, email, password);
+        response = RestAssured.given()
+                .contentType("application/json")
+                .body(stringPut)
+                .put(RestAssured.baseURI + url);
+    }
+
     /* Fin de cada  escenario */
     @After
     public void tearDown() {
         System.out.println("Prueba finalizada. Código de estado: " + response.getStatusCode());
         System.out.println("Cuerpo de la respuesta: " + response.getBody().asString());
+    }
+
+    @And("Debe contener una objeto de un usuario con {string} {string} y {string}")
+    public void debeContenerUnaObjetoDeUnUsuarioConY(String username, String email, String password) {
+
+        response.then().body("username", equalTo(username));
+        response.then().body("email", equalTo(email));
+        response.then().body("password", equalTo(password));
+    }
+
+    @When("Consulta la url  DELETE {string}")
+    public void consultaLaUrlDELETE(String url) {
+        response = RestAssured.given()
+                .contentType("application/json")
+                .delete(RestAssured.baseURI + url);
+    }
+
+    @And("Debe contener una objeto de un usuario con donde su ID se a igual a {int}.")
+    public void debeContenerUnaObjetoDeUnUsuarioConDondeSuIDSeAIgualA(int id) {
+        response.then().body("id", equalTo(id));
     }
 }
