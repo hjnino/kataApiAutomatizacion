@@ -1,5 +1,6 @@
 package org.example.definitions;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -7,6 +8,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,7 +27,7 @@ public class UsersDefinitions {
 
     /* GET  */
     @When("Consulta la url  GET {string}")
-    public void sendRequestGetUsers(String endpoint)  {
+    public void sendRequestGetUsers(String endpoint) {
         response = RestAssured.given()
                 .contentType("application/json")
                 .header("Content-Type", "application/json")
@@ -48,19 +51,18 @@ public class UsersDefinitions {
         response.then().body("email", equalTo(value));
     }
 
-
     /* POST */
     @When("El usuario desea crear un nuevo usuario con los datos {string} {string} y {string} y el metodo POST")
     public void sendPostRequest(String username, String email, String password) {
-        System.out.println(username +  " " +  email +  " " + password);
+        System.out.println(username + " " + email + " " + password);
 
         String stringPost = """
-            {
-                "username": "%s",
-                "email": "%s",
-                "password": "%s"
-            }
-            """.formatted(username, email, password);
+                {
+                    "username": "%s",
+                    "email": "%s",
+                    "password": "%s"
+                }
+                """.formatted(username, email, password);
         response = RestAssured.given()
                 .contentType("application/json")
                 .body(stringPost)
@@ -76,15 +78,15 @@ public class UsersDefinitions {
     /* put */
     @When("El usuario actualice los datos {string} {string} y {string} y el metodo PUT URL {string}")
     public void sendPutRequest(String username, String email, String password, String url) {
-        System.out.println(username +  " " +  email +  " " + password +  " " + url);
+        System.out.println(username + " " + email + " " + password + " " + url);
 
         String stringPut = """
-            {
-                "username": "%s",
-                "email": "%s",
-                "password": "%s"
-            }
-            """.formatted(username, email, password);
+                {
+                    "username": "%s",
+                    "email": "%s",
+                    "password": "%s"
+                }
+                """.formatted(username, email, password);
         response = RestAssured.given()
                 .contentType("application/json")
                 .body(stringPut)
@@ -94,7 +96,7 @@ public class UsersDefinitions {
     /* Fin de cada  escenario */
     @After
     public void tearDown() {
-        System.out.println("Prueba finalizada. Código de estado: " + response.getStatusCode());
+        System.out.println("Prueba finalizada.\nCódigo de estado: " + response.getStatusCode());
         System.out.println("Cuerpo de la respuesta: " + response.getBody().asString());
     }
 
@@ -117,4 +119,51 @@ public class UsersDefinitions {
     public void debeContenerUnaObjetoDeUnUsuarioConDondeSuIDSeAIgualA(int id) {
         response.then().body("id", equalTo(id));
     }
+
+    @Then("Retorna un codigo {int} Error")
+    public void obtieneCodigoDeEstadoError(int status) {
+        response.then().statusCode(status);
+
+    }
+
+    @When("El usuario actualice los datos {string} {string} y {string} y el metodo POST URL {string}")
+    public void elUsuarioActualiceLosDatosYYElMetodoPOSTURL(String username, String email, String password,String URL) {
+        System.out.println(username + " " + email + " " + password + URL);
+
+        String stringPost = """
+                {
+                    "username": "%s",
+                    "email": "%s",
+                    "password": "%s"
+                }
+                """.formatted(username, email, password);
+        response = RestAssured.given()
+                .contentType("application/json")
+                .body(stringPost)
+                .post(RestAssured.baseURI + URL);
+    }
+    @Then("Retorna codigo de respuesta {int} Error")
+    public void retornaCodigoDeRespuestaError(int status) {
+        response.then().statusCode(status);
+    }
+
+    @When("Actualice usuario no existente con los datos {string} {string} {string} y el metodo PUT URL {string}")
+    public void actualiceUsuarioNoExistenteConLosDatosYElMetodoPUTURL (String username, String email, String password, String url) {
+        System.out.println(username + " " + email + " " + password + " " + url);
+
+        String stringPut = """
+                {
+                    "username": "%s",
+                    "email": "%s",
+                    "password": "%s"
+                }
+                """.formatted(username, email, password);
+        response = RestAssured.given()
+                .contentType("application/json")
+                .body(stringPut)
+                .put(RestAssured.baseURI + url);
+
+    }
+
+
 }
