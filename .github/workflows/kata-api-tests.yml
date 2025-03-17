@@ -1,0 +1,48 @@
+name: Serenity BDD API Test Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Tags específicos para ejecutar (opcional)'
+        required: false
+        default: ''
+
+jobs:
+  test:
+    name: Test API con Serenity BDD
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Instalar dependencias
+        run: mvn clean install -DskipTests
+
+      - name: Ejecutar pruebas
+        run: |
+          if [ "${{ github.event.inputs.tags }}" == "" ]; then
+            mvn verify serenity:aggregate
+          else
+            mvn verify -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" serenity:aggregate
+          fi
+
+      - name: Publicar reporte Serenity
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serenity-report
+          path: target/site/serenity/
+          retention-days: 30
