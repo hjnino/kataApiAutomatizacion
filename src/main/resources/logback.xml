@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Appender para salida en consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configuración del logger -->
+    <logger name="com.miapp" level="debug">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- Logger raíz, que puede ser para todo el proyecto -->
+    <root level="debug">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>
