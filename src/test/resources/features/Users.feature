@@ -37,7 +37,7 @@ Feature: User API Tests
 
   Scenario: Intentar crear usuario con datos errados
     Given El usuario tiene URL del API de usuarios
-    When El usuario actualice los datos "new_User" "new@correo.co" y "newClave%Actualizada" y el metodo POST URL "/users/s"
+    When Cree usuario con datos errados "new_User" "new@correo.co" y "newClave%Actualizada" y el metodo POST URL "/users/s"
     Then Retorna codigo de respuesta 404 Error
 
   Scenario: Actualizar usuario inexistente
@@ -45,7 +45,7 @@ Feature: User API Tests
     When Actualice usuario no existente con los datos "Update_User" "Update@correo.com" "Clave%Actualizada" y el metodo PUT URL "/users/s"
     Then Retorna un codigo 400 Error
 
-  Scenario: Eliminar usuario
+  Scenario: Eliminar usuario inexistente
     Given El usuario tiene URL del API de usuarios
     When Consulta la url  DELETE "/users/e"
     Then Retorna un codigo 400 Error

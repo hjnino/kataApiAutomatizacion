@@ -75,7 +75,7 @@ public class UsersDefinitions {
     }
 
 
-    /* put */
+    /* Put */
     @When("El usuario actualice los datos {string} {string} y {string} y el metodo PUT URL {string}")
     public void sendPutRequest(String username, String email, String password, String url) {
         System.out.println(username + " " + email + " " + password + " " + url);
@@ -93,13 +93,6 @@ public class UsersDefinitions {
                 .put(RestAssured.baseURI + url);
     }
 
-    /* Fin de cada  escenario */
-    @After
-    public void tearDown() {
-        System.out.println("Prueba finalizada.\nCódigo de estado: " + response.getStatusCode());
-        System.out.println("Cuerpo de la respuesta: " + response.getBody().asString());
-    }
-
     @And("Debe contener una objeto de un usuario con {string} {string} y {string}")
     public void debeContenerUnaObjetoDeUnUsuarioConY(String username, String email, String password) {
 
@@ -108,6 +101,7 @@ public class UsersDefinitions {
         response.then().body("password", equalTo(password));
     }
 
+    /* Delete */
     @When("Consulta la url  DELETE {string}")
     public void consultaLaUrlDELETE(String url) {
         response = RestAssured.given()
@@ -120,14 +114,15 @@ public class UsersDefinitions {
         response.then().body("id", equalTo(id));
     }
 
+    /* Get */
     @Then("Retorna un codigo {int} Error")
     public void obtieneCodigoDeEstadoError(int status) {
         response.then().statusCode(status);
 
     }
-
-    @When("El usuario actualice los datos {string} {string} y {string} y el metodo POST URL {string}")
-    public void elUsuarioActualiceLosDatosYYElMetodoPOSTURL(String username, String email, String password,String URL) {
+    /* Post*/
+    @When("Cree usuario con datos errados {string} {string} y {string} y el metodo POST URL {string}")
+    public void creeUsuarioConDatosErradosYYElMetodoPOSTURL(String username, String email, String password, String URL) {
         System.out.println(username + " " + email + " " + password + URL);
 
         String stringPost = """
@@ -142,11 +137,13 @@ public class UsersDefinitions {
                 .body(stringPost)
                 .post(RestAssured.baseURI + URL);
     }
+
     @Then("Retorna codigo de respuesta {int} Error")
     public void retornaCodigoDeRespuestaError(int status) {
         response.then().statusCode(status);
     }
 
+    /* Put*/
     @When("Actualice usuario no existente con los datos {string} {string} {string} y el metodo PUT URL {string}")
     public void actualiceUsuarioNoExistenteConLosDatosYElMetodoPUTURL (String username, String email, String password, String url) {
         System.out.println(username + " " + email + " " + password + " " + url);
@@ -163,6 +160,13 @@ public class UsersDefinitions {
                 .body(stringPut)
                 .put(RestAssured.baseURI + url);
 
+    }
+
+    /* Fin de cada  escenario */
+    @After
+    public void tearDown() {
+        System.out.println("Prueba finalizada.\nCódigo de estado: " + response.getStatusCode());
+        System.out.println("Cuerpo de la respuesta: " + response.getBody().asString());
     }
 
 
